@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
+    // 점프 크기
+    public float JumpPower = 5;
+
     // 이동 속도
     public float speed = 5;
     
@@ -35,6 +38,9 @@ public class PlayerMove : MonoBehaviour
         // 2.방향을 만든다.
         Vector3 dir = new Vector3(h, 0, v);
 
+        // 2.0사용자가 바ㅏㄹ보는 방향으로 입력 값 변화시키기
+        dir = Camera.main.transform.TransformDirection(dir);
+
         // 2.1중력을 적용한 수직 방향 추가 v=v0+at
         yVelocity += gravity * Time.deltaTime;
 
@@ -43,8 +49,13 @@ public class PlayerMove : MonoBehaviour
         {
             yVelocity = 0;
         }
-
+        // 2.3시용자가 점프 버튼을 누르면 속도에 점프 크기를 할당한다.
+        if(ARAVRInput.GetDown(ARAVRInput.Button.Two, ARAVRInput.Controller.RTouch))
+        {
+            yVelocity = JumpPower;
+        }
         dir.y = yVelocity;
+
         // 3.이동한다.
         cc.Move(dir * speed * Time.deltaTime);
     }
